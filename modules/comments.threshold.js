@@ -47,6 +47,11 @@ d3.addModule(
             this.prepareThresholds();
             this.updateVisibility(false);
             this.displaySelect();
+            this.fixSidebar();
+            if (d3.content.variant === "dirty.ru") {
+                this.initFixSidebarFixer();
+                this.fixSidebar();
+            }
         },
 
         displaySelect: function()
@@ -236,5 +241,34 @@ d3.addModule(
 
             this.threshold = this.select.val();
             this.updateVisibility(false);
+        },
+        fixSidebarTimeout: null,
+        fSidebarRemoved: false,
+        initFixSidebarFixer: function()
+        {
+            var me = this;
+            $j(window).scroll(function() {
+                me.fixSidebar();
+            }).resize(function(){
+                me.fixSidebar();
+            });
+        },
+
+        fixSidebar: function()
+        {
+            if (this.fSidebarRemoved) {
+                return;
+            }
+            clearTimeout(this.fixSidebarTimeout);
+            this.fixSidebarTimeout = setTimeout(function(){
+                var sidebar = $j(".b-right_sidebar.sidebar");
+                var sidebar_down = sidebar.offset().top + sidebar.outerHeight();
+                var controls_top = $j(".b-comments_controls").offset().top;
+                var diff = sidebar_down - controls_top;
+                if (diff < 100) {
+                    sidebar.remove();
+                    this.fSidebarRemoved = true;
+                }
+            }, 200);
         }
 });
