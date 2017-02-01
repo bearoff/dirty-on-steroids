@@ -17,16 +17,20 @@ d3.addModule(
     min_rating:0,
     max_rating:0,
     selected_index:0,
-    select_properties:{thresholds:[], selected_strings:[],counts:[]},
+    select_properties:{thresholds:[], selected_strings:[], counts:[]},
     sorted_posts:{},
     always_visible_count:0,
     hidden_rating_count:0,
+    initial_posts_count:0,
+    reset_timeout:null,
     my_posts:{},
         run: function()
         {
             if (!d3.content.posts.length || d3.page.user || d3.page.f_search) {
                 return false;
             }
+
+            this.initial_posts_count = d3.content.posts.length;
 
             if (this.config.saveSelectedOption.value) {
                 this.selected_index = d3.storage.get('postsSelectedThreshold'); // todo ask about how to use hidden options
@@ -43,6 +47,7 @@ d3.addModule(
             this.getStats();
             this.prepareThresholds();
             this.updateVisibility(false);
+            this.addResetLink();
             this.displaySelect();
         },
 
@@ -82,7 +87,45 @@ d3.addModule(
 
             this.select.change(function(e){
                 me.onThresholdChange();
-                });
+            });
+        },
+
+        addResetLink: function() {
+            var header_div = $j(".b-blog_nav_sort");
+            var reset_link = $j("<a href='javascript:void(0);' style = 'position: fixed; top: 10px; left: 10px'>R<span></span></a>");
+            header_div.after(reset_link);
+            var me = this;
+
+            reset_link.click(function(){
+                me.resetFilter(reset_link);
+            });
+
+            $j(document).on('d3_sp_new_posts', function (event) {
+                clearTimeout(me.reset_timeout);
+                me.reset_timeout = setTimeout(function(){
+                    me.resetFilter(reset_link);
+                }, 200);
+            });
+        },
+
+        resetFilter: function(reset_link) {
+            var me = this;
+            me.threshold = 0;
+            me.hidden_rating_count = me.always_visible_count = me.min_rating = me.max_rating = 0;
+            me.select = null;
+            me.select_properties = {thresholds:[], selected_strings:[], counts:[]};
+            me.sorted_posts = this.my_posts = {};
+
+            $j("#advansed_treshhold_div").remove();
+            me.getStats();
+            me.prepareThresholds();
+            me.updateVisibility(false);
+            me.displaySelect();
+            
+            var new_count = d3.content.posts.length;
+            var diff = new_count - this.initial_posts_count;
+            this.initial_posts_count = d3.content.posts.length;
+            reset_link.find("span").text(" (+" + diff + ")").show().fadeOut(5000);
         },
 
         getStats: function()

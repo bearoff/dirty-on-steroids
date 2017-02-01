@@ -77,11 +77,16 @@ d3.addContentModule(/(.*\.)?dirty.ru/i,
 			if ($current.is(".comment")) processComment($current);
 			if ($current.is(".post")) processPost($current);
 
-			$j("div.post", event.target).each(
-				function () {
-					processPost($j(this));
-				}
-			);
+            var posts = $j("div.post", event.target);
+
+            if (posts.length) {
+                posts.each(
+                    function () {
+                        processPost($j(this));
+                    }
+                );
+                $j(document).trigger('d3_sp_new_posts');
+            }
 			$j("div.comment", event.target).each(
 				function () {
 					processComment($j(this));
