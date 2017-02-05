@@ -21,6 +21,8 @@
 // @include         https://dirty.ru/*
 // @include         https://*.dirty.ru/*
 // @include         https://www.reddit.com/*
+// @include         https://habrahabr.ru/*
+// @include         https://geektimes.ru/*
 // @run-at          document-end
 // @all_frames      true
 // @version         @buildTime@
@@ -39,7 +41,7 @@ var d3=
 	buildMode: '@buildMode@',
 	buildTime: '@buildTime@',
 	buildNumber: '@buildNumber@',
-	
+
 	/// Search module by name
 	getModule: function(name){
 		return (this.modulesByName[name] == undefined) ? null : this.modulesByName[name];
@@ -49,7 +51,7 @@ var d3=
 		id: null,
 		name: null
 	},
-	
+
 	/// Set style properties
 	setStyle: function(element,style)
 	{
@@ -66,25 +68,25 @@ var d3=
 	newElement: function(tagName,parms)
 	{
 		var e=document.createElement(tagName);
-		
+
 		var i;
 		if(parms.style!==undefined) this.setStyle(e,parms.style);
-		if(parms.attributes!==undefined) for(i in parms.attributes)	e.setAttribute(i,parms.attributes[i]);	
+		if(parms.attributes!==undefined) for(i in parms.attributes)	e.setAttribute(i,parms.attributes[i]);
 		if(parms.innerHTML!==undefined)	e.innerHTML=parms.innerHTML;
-		
+
 		return e;
 	},
 
 	/// newElement('div',...) shortcut
 	newDiv: function(parms) { return this.newElement('div', parms); },
-	
+
 	/// JSON helper
 	json:
 	{
 		encode: function(value) {return (JSON.stringify != undefined ? JSON.stringify : JSON.encode)(value);},
 		decode: function(value)	{return (JSON.parse != undefined ? JSON.parse : JSON.decode)(value);}
 	},
-	
+
 	service:
 	{
 		embedScript: function(text) {
@@ -100,20 +102,20 @@ var d3=
 			script2run.src = url;
 			document.body.appendChild( script2run );
 		},
-		
+
 		embedStyle: function (css) {
 			$j(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0])
 				.append('<style type="text/css">\n'+css+'\n</style>');
 		}
-	
+
 	},
-	
+
 	/// Add content module
 	addContentModule: function(mask, module)
 	{
 		this.contentModules.push({mask:mask, module: module});
 	},
-	
+
 	initContentModules: function()
 	{
 		this.contentModules.forEach(function(item){
@@ -126,9 +128,9 @@ var d3=
 	addModule: function(module)
 	{
 		var log = console && this.buildMode=='Dev';
-		
+
 		if(module.variant !== undefined && $j.inArray(this.content.variant, module.variant)===-1) return;
-		
+
 		this.modules.push(module);
 		if(this.modulesByName[module.name] != undefined)
 			if(console)console.log('Duplicate module '+module.name);
@@ -250,11 +252,11 @@ var d3=
 				this.tabs.addSheet(sheetName, this.drawSheet(this.controls[sheetName]));
 
 			var sw = function(node){$j(node).closest('tbody').next()[node.checked ? 'show':'hide']();};
-			
+
 			$j('.moduleSwitcher input', box)
 				.each(function(index, item){sw(item);})
 				.click(function(event){sw(event.currentTarget);});
-			
+
 			return box;
 		},
 		/// Draw one control sheet
@@ -276,12 +278,12 @@ var d3=
 			this.module=module;
 			this.name=name;
 			module.config[this.name]._control=this;
-			
+
 			this.setValue=function(newValue) {d3.config.data[this.id]=this.module.config[this.name].value=this.value=newValue;};
 			this.getValue=function() {return $j('#'+this.id).val();};
 			this.update=function() {this.setValue(this.getValue());};
 			this.title = function() {return this.description == undefined ? '' : ' title="'+escapeHtml(this.description)+'"';};
-			
+
 			// collect properties from config data
 			for(var i in module.config[name])
 				this[i]=module.config[name][i];
@@ -364,7 +366,7 @@ var d3=
 				}
 				return html+'</select></td></tr>';
 			},
-			
+
 			getValue: function() {return $j('select#'+this.id+' option:selected').val();}
 		},
 		/// Get new values from controls and save config to storage
@@ -392,11 +394,11 @@ var d3=
 		{
 			// if no config data then return
 			if(module.config == undefined) return;
-			
-			// create this type sheet if not exists 
+
+			// create this type sheet if not exists
 			if(this.controls[module.type]== undefined)
 				this.controls[module.type]={};
-			
+
 			// create controls
 			for(var i in module.config)
 			{
@@ -405,7 +407,7 @@ var d3=
 			}
 		}
 	},
-	
+
 	initCore: function()
 	{
 		this.getOriginal();
@@ -413,10 +415,10 @@ var d3=
 		this.user = this.content.findUser();
 		this.config.load();
 		this.addModule(d3.config);
-		
+
 		this.window.d3=this;
-		
-		this.service.getScroll = this.window.getScroll 
+
+		this.service.getScroll = this.window.getScroll
 					? function(){return d3.window.getScroll();}
 					: function(){return {x: window.scrollX, y: window.scrollY};};
 	},
@@ -452,7 +454,7 @@ var d3=
 		each:	function(selector,handler,context)
 		{
 			var nodes=this.get(selector, context);
-			for (var i = 0; i < nodes.snapshotLength; i++) 
+			for (var i = 0; i < nodes.snapshotLength; i++)
 	             if(handler(nodes.snapshotItem(i),i)===false) return false;
 			return true;
 		}
@@ -472,4 +474,4 @@ try
 	if(console) console.log(e);
 }
 
-if (console) console.log('runtime: ' + d3.runTimeTotal + 'ms');
+//if (console) console.log('runtime: ' + d3.runTimeTotal + 'ms');

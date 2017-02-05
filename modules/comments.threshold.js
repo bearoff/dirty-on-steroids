@@ -12,7 +12,7 @@ d3.addModule(
             ,alwaysShowRepliesToMe:{type:'checkbox',value :true,caption:'Не скрывать ответы мне', description:'Всегда показывать ответы на ваши комментарии. Ваши комментарии показываются всегда.'}
 			},
     threshold: 0,
-    variant: ['dirty.ru','leprosorium.ru','reddit.com'],
+    variant: ['dirty.ru','leprosorium.ru','reddit.com','habrahabr.ru'],
     select:null,
     min_rating:0,
     max_rating:0,
@@ -48,7 +48,6 @@ d3.addModule(
             this.prepareThresholds();
             this.updateVisibility(false);
             this.displaySelect();
-            this.fixSidebar();
             if (d3.content.variant === "dirty.ru") {
                 this.initFixSidebarFixer();
                 this.fixSidebar();
@@ -58,16 +57,20 @@ d3.addModule(
         displaySelect: function()
         {
             var me = this;
+            var extra_style = "";
             if (d3.content.variant == "dirty.ru") {
                 var header_div = $j("div.b-comments_controls_new_nav");
             } else if (d3.content.variant == "leprosorium.ru") {
-                var header_div = $j("div.b-comments_controls");
+                header_div = $j("div.b-comments_controls");
             } else if (d3.content.variant == "reddit.com") {
-                var header_div = $j(".thing p.tagline:first");
+                header_div = $j(".thing p.tagline:first");
+            } else if (d3.content.variant == "habrahabr.ru") {
+                header_div = $j(".comments_list .title");
+                extra_style = "font-size: 16px;"
             }
             var select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;"></div>');
             var select_width = this.hidden_rating_count ? 200 : 180;
-            this.select  = $j('<select id="advansed_treshhold" style="width:' + select_width + 'px;"></select>');
+            this.select  = $j('<select id="advansed_treshhold" style="width:'+select_width+'px;'+extra_style+'"></select>');
             select_div.append(this.select);
             header_div.append(select_div);
 
@@ -92,8 +95,15 @@ d3.addModule(
         },
 
         showWithParents: function(comment_container) {
+            if (d3.content.variant === "habrahabr.ru") {
+                comment_container = comment_container.find("> .comment_body");
+                var parent_link = comment_container.find(".icon_comment-parent");
+                var parent_id = parent_link.length ? "comment_" + parent_link.data('parent_id') : "";
+            } else {
+                parent_id = comment_container.attr("data-parent_comment_id");
+            }
+
             comment_container.show();
-            var parent_id = comment_container.attr("data-parent_comment_id");
             if (!parent_id) {
                 return;
             }
@@ -105,7 +115,13 @@ d3.addModule(
             if (!comment.parentId) {
                 return;
             }
-            var parentLink = $j(".c_parent", comment.container);
+
+            var parent_selector = ".c_parent";
+            if (d3.content.variant === "habrahabr.ru") {
+                parent_selector = ".js-comment_parent"; // todo move to modules
+            }
+
+            var parentLink = $j(parent_selector, comment.container);
             var parent = $j("#"+comment.parentId);
             var me = this;
             parentLink.click(function(){

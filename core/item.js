@@ -12,7 +12,11 @@ Item.prototype=
         if (container_temp.hasClass("vote_result__disabled")) {
             return null;
         } else {
-            return parseInt(container_temp.text(),10);
+            var text = container_temp.text();
+            if (d3.content.variant === "habrahabr.ru") {
+                text = text.replace("–", "-");
+            }
+            return parseInt(text,10);
         }
     },
 	getFooter: function(){return $j(this.footerClass,this.container);}
