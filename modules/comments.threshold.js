@@ -12,7 +12,7 @@ d3.addModule(
             ,alwaysShowRepliesToMe:{type:'checkbox',value :true,caption:'Не скрывать ответы мне', description:'Всегда показывать ответы на ваши комментарии. Ваши комментарии показываются всегда.'}
 			},
     threshold: 0,
-    variant: ['dirty.ru','leprosorium.ru'],
+    variant: ['dirty.ru','leprosorium.ru','reddit.com'],
     select:null,
     min_rating:0,
     max_rating:0,
@@ -22,6 +22,7 @@ d3.addModule(
     always_visible_count:0,
     hidden_rating_count:0,
     my_comments:{},
+    visible_parents:{},
         run: function()
         {
             if (!d3.page.postComments
@@ -59,8 +60,10 @@ d3.addModule(
             var me = this;
             if (d3.content.variant == "dirty.ru") {
                 var header_div = $j("div.b-comments_controls_new_nav");
-            } else {
+            } else if (d3.content.variant == "leprosorium.ru") {
                 var header_div = $j("div.b-comments_controls");
+            } else if (d3.content.variant == "reddit.com") {
+                var header_div = $j(".thing p.tagline:first");
             }
             var select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;"></div>');
             var select_width = this.hidden_rating_count ? 200 : 180;
@@ -219,15 +222,32 @@ d3.addModule(
         {
             var show = this.config.beFast.value ? function(item){item.css('display','block');} : function(item){item.show();};
             var hide = this.config.beFast.value ? function(item){item.css('display','none');}  : function(item){item.hide();};
+            this.visible_parents = {};
             
             for (var i=0; i<d3.content.comments.length; i++) {
             	var comment = d3.content.comments[i];
                 var isVisible = this.isVisible(comment);
-                
+
                 (isVisible ? show : hide)(comment.container);
-                
+                if (d3.content.variant === "reddit.com" && isVisible && comment.parentId) {
+                    this.visible_parents[comment.parentId.replace("#", "thing_t1_")] = true;
+                }
+
                 if (first) {
                     this.updateCounts(comment.ratingValue(), isVisible);
+                }
+            }
+            
+            if (d3.content.variant === "reddit.com") {
+                for (var key in this.visible_parents) {
+                    var comm = $j("#" + key);
+                    if (!comm.is(":visible")) {
+                        show(comm);
+                        comm.removeClass("collapsed");
+                        var parents = comm.parents();
+                        parents.filter(".collapsed").removeClass("collapsed");
+                        show(parents.filter(":not(:visible)"));
+                    }
                 }
             }
         },
