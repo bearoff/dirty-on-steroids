@@ -1,10 +1,11 @@
 // content interface module for *.dirty.ru
-d3.addContentModule(/(.*\.)?dirty.ru/i,
+d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
 {
 	type: "Ядро",
 	author: 'crimaniak',
 	name: 'Интерфейс к содержимому dirty.ru',
 	variant: 'dirty.ru',
+	domain: 'd3.ru',
 	posts: [],
 	comments: [],
 	commentListeners: [],

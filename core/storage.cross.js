@@ -19,7 +19,8 @@ d3.storage =
 			if (console) console.log("Trying to save invalid cookie! ", value);
 			return;
 		}
-		return $j.cookie(key, d3.json.encode(value), {domain: '.' + d3.content.variant, path:'/', expires: 365});
+        var domain = d3.content.domain || d3.content.variant;
+		return $j.cookie(key, d3.json.encode(value), {domain: '.' + domain, path:'/', expires: 365});
 	},
 	remove: function(key)
 	{
