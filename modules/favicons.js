@@ -5,7 +5,7 @@ d3.addModule(
 	name: 'Показывать favicons доменов',
 	author: 'Stasik0, NickJr, crimaniak',
 	config: {
-		active:{type:'checkbox', value:1},
+		active:{type:'checkbox', value:0},
 		mouseover:{type:'radio', caption:'Когда:', options:{"перманентно":0, "только при наведении":1}, value:0},
 		position:{type:'radio', caption:'Где:', options:{"слева от ссылки":0, "справа от ссылки":1}, value:0},
 		domainWhitelist:{type: 'text', caption:'Список доменов', value:'d3.ru,dirty.ru,livejournal.com,lenta.ru,flickr.com,google.com,google.ru,yandex.ru,yandex.net,rian.ru,wikipedia.org,wikimedia.org,futurico.ru,leprosorium.ru,facebook.com,twitter.com,gazeta.ru,vedomosti.ru,1tv.ru,fontanka.ru,kommersant.ru,vesti.ru,kp.ru,blogspot.com,narod.ru,vimeo.com,rbc.ru,korrespondent.net,youtube.com'

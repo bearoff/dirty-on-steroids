@@ -5,7 +5,7 @@ d3.addModule(
 	name: 'Показывать внешние ссылки из заголовков постов',
 	author: 'crea7or',
 	variant: ['dirty.ru'],
-	config: {active:{type:'checkbox',value:1}
+	config: {active:{type:'checkbox',value:0}
 			,headerToComments:{type:'checkbox',caption:'Ссылка заголовка на комментарии',value:0}
 	},
 

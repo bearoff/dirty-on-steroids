@@ -7,7 +7,7 @@ d3.addModule(
 	name: 'Спрятать лишнее',
 	variant: ['dirty.ru'],
 	config: 
-		{active:{type:'checkbox', value:1}
+		{active:{type:'checkbox', value:0}
 		,hideSocialLinks:{type:'checkbox', caption:'Спрятать кнопки социальных сетей', value:0}
 		},
 	run: function()

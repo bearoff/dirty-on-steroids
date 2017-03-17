@@ -4,7 +4,7 @@ d3.addModule(
 	type: "Содержание",
 	name: 'Добавлять предпросмотр для инбоксов',
 	author: 'crea7or',
-	config: {active:{type:'checkbox',value:1}},
+	config: {active:{type:'checkbox',value:0}},
 
 	run: function()
 	{

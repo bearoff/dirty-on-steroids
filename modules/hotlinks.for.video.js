@@ -4,7 +4,7 @@ d3.addModule(
 	type: "Содержание",
 	name: 'Просмотр видео по клику на ссылке',
 	author: 'crea7or',
-	config: {active:{type:'checkbox',value:true,caption:'Просмотр видео прямо на сайте',description:'Просмотр видео прямо на сайте, не переходя на youtube'}			
+	config: {active:{type:'checkbox',value:false,caption:'Просмотр видео прямо на сайте',description:'Просмотр видео прямо на сайте, не переходя на youtube'}
 			,bigwindow:{type:'checkbox',value:false,caption:'открывать в большом размере',description:'видео будет открываться в большом окне 1024px иначе 800px'}
 			,addimages:{type:'checkbox',value:false,caption:'добавлять превью видео к ссылкам',description:'добавлять автоматически картинку-превью ко всем ссылкам на видео без оной'}
 			},

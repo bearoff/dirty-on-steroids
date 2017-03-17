@@ -4,7 +4,7 @@ d3.addModule(
 	type: "Социализм",
 	name: 'Цветовая дифференциация полов',
 	author: 'crea7or',
-	config: {active:{type:'checkbox',value:1}},
+	config: {active:{type:'checkbox',value:0}},
 	
 	onPost: function(post){
 		this.processElements(post.info.get(0).querySelectorAll('a.c_user'));

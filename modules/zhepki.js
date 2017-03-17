@@ -4,7 +4,7 @@ d3.addModule({
 	name: 'Жепки',
 	author: 'Aivean',
 	variant: ['dirty.ru'],
-	config: {active: {type: 'checkbox', value: 1},
+	config: {active: {type: 'checkbox', value: 0},
 		rating: {
 			caption: 'Показывать жепки с рейтингом:',
 			type: 'select', value: 0,

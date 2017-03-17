@@ -6,7 +6,7 @@ d3.addModule(
 	name: 'Линк на последнюю версию',
 	author: 'crimaniak',
 	config: {
-		checkUpdates:{type:'checkbox', value: 1, caption: 'проверять наличие новых версий', description: 'Если эта опция активна, время от времени сервис-пак проверяет наличие обновлений и сообщает о них, а также спрашивает разрешение на обновление.'},
+		checkUpdates:{type:'checkbox', value: 0, caption: 'проверять наличие новых версий', description: 'Если эта опция активна, время от времени сервис-пак проверяет наличие обновлений и сообщает о них, а также спрашивает разрешение на обновление.'},
 		ver:{type:'html', value:'Текущая версия: '+d3.buildNumber+' '+d3.buildMode+' от '+d3.buildTime},
 		link:{type:'html',value:'<a href="https://github.com/crimaniak/dirty-on-steroids/raw/master/result/d3.user.js">Установить последнюю версию скрипта</a>'}
 	},

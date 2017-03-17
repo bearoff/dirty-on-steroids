@@ -6,7 +6,7 @@ d3.addModule(
 		author: 'Aivean',
 		variant: ['dirty.ru'],		
 		config: {
-			active: {type: 'checkbox', value: 1},
+			active: {type: 'checkbox', value: 0},
 			style: {
 				type: 'select',
 				value: "yellow-back",

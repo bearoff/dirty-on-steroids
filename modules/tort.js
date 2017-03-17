@@ -6,7 +6,7 @@ d3.addModule(
 	author: 'crea7or',
 	variant: ['dirty.ru'],
 	config: {
-		active:{type:'checkbox',value:1}
+		active:{type:'checkbox',value:0}
 		,postInfoMove:{type:'checkbox',caption:'Информация о посте внизу',value:1}
 	},
 
