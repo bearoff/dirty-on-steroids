@@ -36,8 +36,6 @@ d3.addModule(
 			e.preventDefault(); 
 			me.scrollToItem(me.nextMine);
 		});
-		var oldSwitch = d3.window.commentsHandler.switchNew;
-		d3.window.commentsHandler.switchNew = function(){oldSwitch.apply(d3.window.commentsHandler);me.onlyNewTest();me.processNewPosition();};
 	},
 
 	onlyNewTest: function()

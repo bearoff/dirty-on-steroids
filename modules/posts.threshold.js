@@ -64,7 +64,7 @@ d3.addModule(
                 select_width = select_width + 30;
             }
             var me = this;
-            var header_div = $j(".b-blog_nav_sort");
+            var header_div = $j(".p-post-list__toolbar:first");
             var select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;"></div>');
             this.select  = $j('<select id="advansed_treshhold" style="width:' + select_width + 'px;font-size:15px;"></select>');
             select_div.append(this.select);
@@ -91,7 +91,7 @@ d3.addModule(
         },
 
         addResetLink: function() {
-            var header_div = $j(".b-blog_nav_sort");
+            var header_div = $j("body");
             var reset_link = $j("<a href='javascript:void(0);' style = 'position: fixed; top: 10px; left: 10px'>R<span></span></a>");
             header_div.after(reset_link);
             var me = this;

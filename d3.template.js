@@ -463,9 +463,9 @@ var d3=
 
 // @corelibs@
 // @contentModules@
-
+// todo add some check to not wait
+setTimeout(function(){
 d3.initCore();
-
 try
 {
 // @modules@
@@ -474,4 +474,6 @@ try
 	if(console) console.log(e);
 }
 
-//if (console) console.log('runtime: ' + d3.runTimeTotal + 'ms');
+    if (console) console.log('runtime: ' + d3.runTimeTotal + 'ms');
+
+}, 3000);

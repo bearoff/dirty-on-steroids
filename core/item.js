@@ -6,7 +6,7 @@ Item.prototype=
 	getContent: function(){return $j(this.contentClass,this.container);},
 	getBody: function(){return $j(this.bodyClass, this.container);},
 	getContentText: function(){return this.getContent().text();},
-	ratingContainer: function(){return $j('.vote_result',this.container);},
+	ratingContainer: function(){return $j('> .b-comment__body .b-rating__value-number', this.container);},
 	ratingValue: function(){
         var container_temp = this.ratingContainer();
         if (container_temp.hasClass("vote_result__disabled")) {
@@ -16,7 +16,8 @@ Item.prototype=
             if (d3.content.variant === "habrahabr.ru") {
                 text = text.replace("–", "-");
             }
-            return parseInt(text,10);
+            var val = parseInt(text, 10);
+            return isNaN(val) ? null : val;
         }
     },
 	getFooter: function(){return $j(this.footerClass,this.container);}
