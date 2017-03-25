@@ -4,7 +4,8 @@ var Post=function(container)
 	this.container=container;
 	this.container.get(0).post=this;
 
-    var post_link = container.find('.b-post-title__link:first').attr('href').replace(/\/$/, "");
+    var href = container.find('.b-post-title__link:first').attr('href');
+    var post_link = href ? href.replace(/\/$/, "") : '';
     var parts = post_link.split('-');
 	this.id = parseInt(parts[parts.length-1], 10);
 	this.info=$j('.b-post-footer',this.container);

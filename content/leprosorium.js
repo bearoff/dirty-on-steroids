@@ -16,6 +16,28 @@ d3.addContentModule(/(.*\.)?leprosorium.ru/i,
 
 	run: function()
 	{
+        var LeproComment=function(container)
+        {
+            this.container=container;
+            container.get(0).comment=this;
+            this.id=this.container.attr('id');
+            this.isNew=this.container.hasClass('new');
+            this.isMine=this.container.hasClass('mine');
+            this.userId=this.container.attr('data-user_id');
+            //this.indent=parseInt(/indent_(\d+)/.exec(this.container.attr('class'))[1],10); not safe and not used
+            this.userName=$j('.c_user',this.container).text();
+            this.parentId=this.container.attr('data-parent_comment_id');
+        };
+        LeproComment.prototype=new Item
+        ({
+            contentClass: '.c_body',
+            bodyClass: '.c_body',
+            footerClass: '.c_footer',
+            getAuthor: function(){return new User(this.userName,this.userId);},
+            getClass: function(){return 'comment';},
+            ratingContainer: function(){return $j('.vote_result',this.container);}
+        });
+        d3.Comment = LeproComment;
 
 		var isInbox = document.location.pathname.substr(0,10)=="/my/inbox/";
 		d3.page=
@@ -62,7 +84,7 @@ d3.addContentModule(/(.*\.)?leprosorium.ru/i,
 		}
 
 		function processComment($comment) {
-			var comment = new Comment($comment);
+			var comment = new d3.Comment($comment);
 			me.countComment(comment);
 			me.commentListeners.forEach(function (listener) {
 				try {
@@ -100,7 +122,7 @@ d3.addContentModule(/(.*\.)?leprosorium.ru/i,
 			me.countPost(new Post($j(this)));
 		});
 		$j('.comment').each(function () {
-			me.countComment(new Comment($j(this)));
+			me.countComment(new d3.Comment($j(this)));
 		});
 	},
 

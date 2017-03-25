@@ -15,7 +15,7 @@ d3.addContentModule(/(.*\.)?(habrahabr|geektimes).ru/i,
 
 	run: function()
 	{
-        HabrComment = function(container)
+        var HabrComment = function(container)
         {
             this.container=container;
             container.get(0).comment=this;
