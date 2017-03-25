@@ -243,6 +243,7 @@ d3.addModule(
                     this.updateCounts(post.ratingValue(), isVisible);
                 }
             }
+            $j(document).trigger('d3sp_content_updated');
         },
 
         onThresholdChange: function()

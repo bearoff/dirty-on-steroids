@@ -23,6 +23,7 @@ d3.addModule(
 		
 		var me=this;
 		$j(window).scroll(function(event){me.onScroll();});
+        $j(document).on("d3sp_content_updated", function(){me.onScroll();});
 		$j('#home').mousedown(function(e){e.preventDefault(); me.scrollToPosition(0);});
 		$j('#down').mousedown(function(e){
 			e.preventDefault(); 

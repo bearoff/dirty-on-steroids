@@ -280,6 +280,7 @@ d3.addModule(
                     }
                 }
             }
+            $j(document).trigger('d3sp_content_updated');
         },
 
         onThresholdChange: function()
