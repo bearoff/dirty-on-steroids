@@ -13,6 +13,7 @@ d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
 	postsUpdatedHandler: new DelayedEventHandler(),
 	commentsUpdatedHandler: new DelayedEventHandler(),
 	itemsUpdatedHandler: new DelayedEventHandler(),
+    comment_selector: ".b-comment:not(#b-comment-root)",
 
 	run: function()
 	{
@@ -35,9 +36,37 @@ d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
 			items: function(){return d3.content.items();}
 		};
 
-        d3.user = this.findUser();
+        var OldComment=function(container)
+        {
+            this.container=container;
+            container.get(0).comment=this;
+            this.id=this.container.attr('id');
+            this.isNew=this.container.hasClass('new');
+            this.isMine=this.container.hasClass('mine');
+            this.userId=this.container.attr('data-user_id');
+            this.userName=$j('.c_user',this.container).text();
+            this.parentId=this.container.attr('data-parent_comment_id');
+        };
+        OldComment.prototype=new Item
+        ({
+            contentClass: '.c_body',
+            bodyClass: '.c_body',
+            footerClass: '.c_footer',
+            getAuthor: function(){return new User(this.userName,this.userId);},
+            getClass: function(){return 'comment';},
+            ratingContainer: function(){return $j('.vote_result',this.container);}
+        });
 
 		var me=this;
+
+        if (isInbox) {
+            me.comment_selector = ".comment";
+            d3.Comment = OldComment;
+        } else {
+            d3.Comment = Comment;
+        }
+
+        d3.user = this.findUser();
 
 		this.countItems();
 
@@ -64,7 +93,7 @@ d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
 		}
 
 		function processComment($comment) {
-			var comment = new Comment($comment);
+			var comment = new d3.Comment($comment);
 			me.countComment(comment);
 			me.commentListeners.forEach(function (listener) {
 				try {
@@ -77,7 +106,7 @@ d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
 
 		$j(document).on('DOMNodeInserted', function (event) {
 			var $current = $j(event.target);
-			if ($current.is(".b-comment:not(#b-comment-root)")) processComment($current);
+			if ($current.is(me.comment_selector)) processComment($current);
 			if ($current.is(".p-post-list__post")) processPost($current);
 
             var posts = $j(".p-post-list__post", event.target);
@@ -89,7 +118,7 @@ d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
                 );
                 $j(document).trigger('d3_sp_new_posts');
             }
-			$j(".b-comment:not(#b-comment-root)", event.target).each(
+			$j(me.comment_selector, event.target).each(
 				function () {
 					processComment($j(this));
 				}
@@ -107,8 +136,8 @@ d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
 		$j('.p-post-list__post').each(function () {
 			me.countPost(new Post($j(this)));
 		});
-		$j('.b-comment:not(#b-comment-root)').each(function () {
-			me.countComment(new Comment($j(this)));
+		$j(me.comment_selector).each(function () {
+			me.countComment(new d3.Comment($j(this)));
 		});
 	},
 
