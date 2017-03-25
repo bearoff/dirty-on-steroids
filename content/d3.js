@@ -35,6 +35,8 @@ d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
 			items: function(){return d3.content.items();}
 		};
 
+        d3.user = this.findUser();
+
 		var me=this;
 
 		this.countItems();
@@ -158,11 +160,16 @@ d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
 	findUser: function()
 	{
 		var user = { name: "", id: 0};
-		if ( d3.globals && d3.globals.user )
-		{
-			user = d3.globals.user;
-			user.name = user.login;
-		}
+		if (!d3.window.wrapperName || !d3.window.entryStorages || !d3.window.entryStorages[d3.window.wrapperName]) {
+            return user;
+        }
+
+        var user_data = d3.window.entryStorages[d3.window.wrapperName].user;
+        if (!user_data) {
+            return user;
+        }
+        user = user_data;
+        user.name = user.login;
 		return user;
 	},
 	
