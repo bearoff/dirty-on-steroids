@@ -464,16 +464,26 @@ var d3=
 // @corelibs@
 // @contentModules@
 // todo add some check to not wait
-setTimeout(function(){
-d3.initCore();
-try
-{
-// @modules@
-}catch(e)
-{
-	if(console) console.log(e);
+
+var timeout = 0;
+var d3_hostmask = /(.*\.)?(d3|dirty).ru/i;
+if (document.location.hostname.match(d3_hostmask)) {
+    // todo add some check that content was loaded instead of hardcoded timeout
+    timeout = 3000;
 }
 
-    if (console) console.log('runtime: ' + d3.runTimeTotal + 'ms');
+setTimeout(function () {
+    d3.initCore();
+    try
+    {
+        // @modules@
+    } catch (e)
+    {
+        if (console)
+            console.log(e);
+    }
 
-}, 3000);
+    if (console)
+        console.log('runtime: ' + d3.runTimeTotal + 'ms');
+
+}, timeout);
