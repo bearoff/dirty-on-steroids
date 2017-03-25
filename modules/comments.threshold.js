@@ -4,11 +4,10 @@ d3.addModule(
 	name: 'Порог комментариев',
 	author: 'bearoff',
 	config: {active:{type:'checkbox',value:true, description:'Добавляет выпадающий список, который позволяет скрывать комментарии с низким рейтингом. Рейтинги в списке хитро рассчитываются для каждого поста индивидуально. Комментарии со спрятанным рейтингом показываются всегда.'}
-            ,beFast:{type:'checkbox',value:false,caption:'Работать очень быстро (кнопка "новые" не будет работать)', description:'Самая важная опция. Быстрый способ работает на порядок быстрее, чем медленный. Это становится заметно в постах от сотни комментариев. Однако быстрый способ ломает кнопки _все комментарии_/_новые_. Если для вас это не критично — смело используйте эту опцию.'}
             ,optionsCount:{type:'text',value:'10',caption:'Количество опций: ',description:'Cколько опций будет в ниспадающем меню. Когда комментариев в посте мало, опций может быть меньше, чем это значение.'}
             ,defaultOption:{type:'text',value:'0',caption:'Опция по умолчанию: ', description:'Какая опция применится сразу после того, как вы откроете пост.'}
-            ,saveSelectedOption:{type:'checkbox',value :true,caption:'Использовать опцию, выбранную на странице, вместо умолчания', description:'Если поставить тут галочку, то вместо опции по умолчанию будет использоваться та опция, которую вы последний раз выбрали в ниспадающем меню.'}
-            ,minCommentsCount:{type:'text',value:'5',caption:'Минимум комментариев для работы: ', description:'Если в посте будет меньше комментариев, чем значение этого параметра, трешхолд не появится на странице.'}
+            ,saveSelectedOption:{type:'checkbox',value :false,caption:'Использовать опцию, выбранную на странице, вместо умолчания', description:'Если поставить тут галочку, то вместо опции по умолчанию будет использоваться та опция, которую вы последний раз выбрали в ниспадающем меню.'}
+            ,minCommentsCount:{type:'text',value:'10',caption:'Минимум комментариев для работы: ', description:'Если в посте будет меньше комментариев, чем значение этого параметра, трешхолд не появится на странице.'}
             ,alwaysShowRepliesToMe:{type:'checkbox',value :true,caption:'Не скрывать ответы мне', description:'Всегда показывать ответы на ваши комментарии. Ваши комментарии показываются всегда.'}
             ,expandCollapsedComments:{type:'checkbox',value :true,caption:'Разворачивать свёрнутые ветки', description:'Разворачивать свёрнутые ветки'}
 			},
@@ -241,8 +240,8 @@ d3.addModule(
         
         updateVisibility: function(first)
         {
-            var show = this.config.beFast.value ? function(item){item.css('display','block');} : function(item){item.show();};
-            var hide = this.config.beFast.value ? function(item){item.css('display','none');}  : function(item){item.hide();};
+            var show = function(item){item.css('display','block');};
+            var hide = function(item){item.css('display','none');};
             this.visible_parents = {};
             
             for (var i=0; i<d3.content.comments.length; i++) {
@@ -302,5 +301,5 @@ d3.addModule(
             $j('.b-comment__expand-button').each(function(){
                 $j(this)[0].click();
             });
-        }
+            }
 });
