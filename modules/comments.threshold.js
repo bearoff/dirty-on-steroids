@@ -10,6 +10,7 @@ d3.addModule(
             ,saveSelectedOption:{type:'checkbox',value :false,caption:'Использовать опцию, выбранную на странице, вместо умолчания', description:'Если поставить тут галочку, то вместо опции по умолчанию будет использоваться та опция, которую вы последний раз выбрали в ниспадающем меню.'}
             ,minCommentsCount:{type:'text',value:'5',caption:'Минимум комментариев для работы: ', description:'Если в посте будет меньше комментариев, чем значение этого параметра, трешхолд не появится на странице.'}
             ,alwaysShowRepliesToMe:{type:'checkbox',value :true,caption:'Не скрывать ответы мне', description:'Всегда показывать ответы на ваши комментарии. Ваши комментарии показываются всегда.'}
+            ,expandCollapsedComments:{type:'checkbox',value :true,caption:'Разворачивать свёрнутые ветки', description:'Разворачивать свёрнутые ветки'}
 			},
     threshold: 0,
     variant: ['dirty.ru','leprosorium.ru','reddit.com','habrahabr.ru'],
@@ -44,6 +45,9 @@ d3.addModule(
                 }
             }
 
+            if (this.config.expandCollapsedComments.value) {
+                this.expandCollapsedComments();
+            }
             this.getStats();
             this.prepareThresholds();
             this.updateVisibility(false);
@@ -292,5 +296,11 @@ d3.addModule(
 
             this.threshold = this.select.val();
             this.updateVisibility(false);
+        },
+
+        expandCollapsedComments: function() {
+            $j('.b-comment__expand-button').each(function(){
+                $j(this)[0].click();
+            });
         }
 });

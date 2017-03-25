@@ -92,7 +92,7 @@ d3.addModule(
 
         addResetLink: function() {
             var header_div = $j("body");
-            var reset_link = $j("<a href='javascript:void(0);' style = 'position: fixed; top: 10px; left: 50px; z-index: 999;'>R<span></span></a>");
+            var reset_link = $j("<a href='javascript:void(0);' style = 'position: fixed; top: 50px; left: 10px; z-index: 999;'>R<span></span></a>");
             header_div.after(reset_link);
             var me = this;
 
