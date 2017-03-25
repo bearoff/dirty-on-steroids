@@ -20,7 +20,7 @@ class d3merge
 		self::$browser = $browser;
 		chdir(self::$buildDir.'..');
 
-		$release = ($mode=='release') || (file_exists(self::gitHead) && preg_match('!/master$!', file_get_contents(self::gitHead)));
+		$release = ($mode=='release' || (file_exists(self::gitHead) && preg_match('!/master$!', file_get_contents(self::gitHead))) && $mode!='dev');
 		$buildMode = $release ? 'Release' : 'Dev';
 		echo "$buildMode mode\n";
 
