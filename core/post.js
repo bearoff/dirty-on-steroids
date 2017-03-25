@@ -11,7 +11,7 @@ var Post=function(container)
 	this.info=$j('.b-post-footer',this.container);
 	this.userName = $j('.b-user-login__login',this.info).text();
 	this.userId= ''; //parseInt($j("a.c_user", this.container).attr("data-user_id") ,10);
-	this.isNew = true; // $j('a[href*="#new"]',this.info).length || $j(".b-all_new_comments_link" ,this.info).length;
+	this.isNew = ($j(".b-comment-counter__link_type_new .b-comment-counter__mobile", this.info).text() != "0");
 	this.isMine = this.userName==d3.user.name;
 };
 
