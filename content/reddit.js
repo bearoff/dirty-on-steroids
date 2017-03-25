@@ -15,7 +15,7 @@ d3.addContentModule(/(.*\.)?reddit.com/i,
 
 	run: function()
 	{
-        RedditComment = function(container)
+        var RedditComment = function(container)
         {
             this.container=container;
             container.get(0).comment=this;

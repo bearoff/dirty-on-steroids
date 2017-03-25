@@ -4,7 +4,7 @@ d3.addModule(
 	name: 'Порог комментариев',
 	author: 'bearoff',
 	config: {active:{type:'checkbox',value:true, description:'Добавляет выпадающий список, который позволяет скрывать комментарии с низким рейтингом. Рейтинги в списке хитро рассчитываются для каждого поста индивидуально. Комментарии со спрятанным рейтингом показываются всегда.'}
-            ,beFast:{type:'checkbox',value:true,caption:'Работать очень быстро (кнопка "новые" не будет работать)', description:'Самая важная опция. Быстрый способ работает на порядок быстрее, чем медленный. Это становится заметно в постах от сотни комментариев. Однако быстрый способ ломает кнопки _все комментарии_/_новые_. Если для вас это не критично — смело используйте эту опцию.'}
+            ,beFast:{type:'checkbox',value:false,caption:'Работать очень быстро (кнопка "новые" не будет работать)', description:'Самая важная опция. Быстрый способ работает на порядок быстрее, чем медленный. Это становится заметно в постах от сотни комментариев. Однако быстрый способ ломает кнопки _все комментарии_/_новые_. Если для вас это не критично — смело используйте эту опцию.'}
             ,optionsCount:{type:'text',value:'10',caption:'Количество опций: ',description:'Cколько опций будет в ниспадающем меню. Когда комментариев в посте мало, опций может быть меньше, чем это значение.'}
             ,defaultOption:{type:'text',value:'0',caption:'Опция по умолчанию: ', description:'Какая опция применится сразу после того, как вы откроете пост.'}
             ,saveSelectedOption:{type:'checkbox',value :false,caption:'Использовать опцию, выбранную на странице, вместо умолчания', description:'Если поставить тут галочку, то вместо опции по умолчанию будет использоваться та опция, которую вы последний раз выбрали в ниспадающем меню.'}
@@ -291,34 +291,5 @@ d3.addModule(
 
             this.threshold = this.select.val();
             this.updateVisibility(false);
-        },
-        fixSidebarTimeout: null,
-        fSidebarRemoved: false,
-        initFixSidebarFixer: function()
-        {
-            var me = this;
-            $j(window).scroll(function() {
-                me.fixSidebar();
-            }).resize(function(){
-                me.fixSidebar();
-            });
-        },
-
-        fixSidebar: function()
-        {
-            if (this.fSidebarRemoved) {
-                return;
-            }
-            clearTimeout(this.fixSidebarTimeout);
-            this.fixSidebarTimeout = setTimeout(function(){
-                var sidebar = $j(".b-right_sidebar.sidebar");
-                var sidebar_down = sidebar.offset().top + sidebar.outerHeight();
-                var controls_top = $j(".b-comments_controls").offset().top;
-                var diff = sidebar_down - controls_top;
-                if (diff < 100) {
-                    sidebar.remove();
-                    this.fSidebarRemoved = true;
-                }
-            }, 200);
         }
 });
