@@ -303,7 +303,7 @@ var d3=
 		{
 			drawControl: function()
 			{
-				return '<input style="-moz-appearance:checkbox; -webkit-appearance:checkbox;" type="checkbox" id="'+this.id+'" name="'+this.id+'"'+(this.value ? ' checked' : '')+'>';
+				return '<input style="margin: 5px 2px 0; -moz-appearance:checkbox; -webkit-appearance:checkbox;" type="checkbox" id="'+this.id+'" name="'+this.id+'"'+(this.value ? ' checked' : '')+'>';
 			},
 			draw: function()
 			{
