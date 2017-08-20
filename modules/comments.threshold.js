@@ -66,7 +66,7 @@ d3.addModule(
             } else if (d3.content.variant == "reddit.com") {
                 header_div = $j(".thing p.tagline:first");
             } else if (d3.content.variant == "habrahabr.ru") {
-                header_div = $j(".comments_list .title");
+                header_div = $j(".comments-section__head");
                 extra_style = "font-size: 16px;"
             }
             var select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;"></div>');
@@ -97,8 +97,8 @@ d3.addModule(
 
         showWithParents: function(comment_container) {
             if (d3.content.variant === "habrahabr.ru") {
-                comment_container = comment_container.find("> .comment_body");
-                var parent_link = comment_container.find(".icon_comment-parent");
+                comment_container = comment_container.find("> .content-list__item_comment");
+                var parent_link = comment_container.find(".js-comment_parent");
                 var parent_id = parent_link.length ? "comment_" + parent_link.data('parent_id') : "";
             } else if (d3.content.variant === "dirty.ru") {
                 var parent = comment_container.parent().closest(".b-comment:not(#b-comment-root)");

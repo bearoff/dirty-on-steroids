@@ -27,10 +27,10 @@ d3.addContentModule(/(.*\.)?(habrahabr|geektimes).ru/i,
         };
         HabrComment.prototype = new Item
         ({
-            contentClass: '.message',
-            bodyClass: '.usertext-body',
-            footerClass: '.info',
-            getClass: function(){return 'comment_body';},
+            contentClass: '.comment__message',
+            bodyClass: '.comment__message',
+            footerClass: '.comment__head',
+            getClass: function(){return 'content-list__item_comment';},
             ratingContainer: function(){
                 return $j('.js-score',this.container);
             }
@@ -42,7 +42,7 @@ d3.addContentModule(/(.*\.)?(habrahabr|geektimes).ru/i,
 		{
 			inbox: isInbox,
 			my: false,
-			postComments: ($j(".comments_form").length > 0),
+			postComments: ($j(".comments-section").length > 0),
 			inboxComments: false,
 			onlyNew: false,
 			user: false
@@ -79,7 +79,7 @@ d3.addContentModule(/(.*\.)?(habrahabr|geektimes).ru/i,
 		this.posts=[];
 		this.comments=[];
 		var me=this;
-		$j('.comment_body').each(function () {
+		$j('.comment').each(function () {
 			me.countComment(new d3.Comment($j(this)));
 		});
 	},
