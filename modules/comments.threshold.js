@@ -116,20 +116,23 @@ d3.addModule(
         },
 
         fixParentLink: function(comment) {
+            if (d3.content.variant !== "dirty.ru") {
+                return;
+            }
+
             if (!comment.parentId) {
                 return;
             }
 
-            var parent_selector = ".c_parent";
-            if (d3.content.variant === "habrahabr.ru") {
-                parent_selector = ".js-comment_parent"; // todo move to modules
-            }
-
-            var parentLink = $j(parent_selector, comment.container);
-            var parent = $j("#"+comment.parentId);
-            var me = this;
-            parentLink.click(function(){
-                me.showWithParents(parent);
+            var parent_link = $j("<a title='Highlight parent' style='cursor: pointer;'>&nbsp;&uarr;&nbsp;</a>");
+            comment.container.find(">.b-comment__body .b-comment-toolbar").append(parent_link);
+            var parent = $j("#b-comment-"+comment.parentId);
+            parent_link.click(function(){
+                var parent_body = parent.find(">.b-comment__body ");
+                parent_body.css('border', '1px solid grey').css('background', 'lightyellow');
+                setTimeout(function(){
+                    parent_body.css('background', 'none');
+                }, 500);
             });
         },
 
