@@ -132,7 +132,7 @@ d3.addModule(
                 me.showWithParents(parent);
             });
         },
-        
+
         getStats: function()
         {
             for (var i=0; i<d3.content.comments.length; i++) {
@@ -155,7 +155,7 @@ d3.addModule(
                 }
             }
         },
-        
+
         prepareThresholds: function()
         {
             var comments_count = d3.content.comments.length;
@@ -200,7 +200,7 @@ d3.addModule(
             this.select_properties.selected_strings[this.selected_index] = 'selected';
             this.threshold = this.select_properties.thresholds[this.selected_index];
         },
-        
+
         updateCounts: function(rating_value, visible)
         {
             for (var i=0; i<this.select_properties.thresholds.length;i++) {
@@ -211,11 +211,11 @@ d3.addModule(
                 }
             }
         },
-        
+
         isReplyToMe: function(comment){
             return comment.parentId && this.my_comments[comment.parentId];
         },
-        
+
         isVisible: function(comment)
         {
             if (comment.isMine) {
@@ -237,13 +237,13 @@ d3.addModule(
             }
             return false;
         },
-        
+
         updateVisibility: function(first)
         {
             var show = function(item){item.css('display','block');};
             var hide = function(item){item.css('display','none');};
             this.visible_parents = {};
-            
+
             for (var i=0; i<d3.content.comments.length; i++) {
             	var comment = d3.content.comments[i];
                 var isVisible = this.isVisible(comment);
@@ -252,7 +252,7 @@ d3.addModule(
                 if (isVisible && comment.parentId) {
                     if (d3.content.variant === "reddit.com") {
                         this.visible_parents[comment.parentId.replace("#", "thing_t1_")] = true;
-                    } else if (d3.content.variant === "dirty.ru") {
+                    } else if (d3.content.variant === "dirty.ru" || d3.content.variant === "habrahabr.ru") {
                         this.visible_parents[comment.parentId] = true;
                     }
                 }
@@ -261,7 +261,7 @@ d3.addModule(
                     this.updateCounts(comment.ratingValue(), isVisible);
                 }
             }
-            
+
             if (d3.content.variant === "reddit.com") {
                 for (var key in this.visible_parents) {
                     var comm = $j("#" + key);
@@ -276,6 +276,15 @@ d3.addModule(
             } else if (d3.content.variant === "dirty.ru") {
                 for (var key in this.visible_parents) {
                     var comm = $j("#b-comment-" + key);
+                    if (!comm.is(":visible")) {
+                        show(comm);
+                        var parents = comm.parents();
+                        show(parents.filter(":not(:visible)"));
+                    }
+                }
+            } else if (d3.content.variant === "habrahabr.ru") {
+                for (var key in this.visible_parents) {
+                    var comm = $j("#" + key);
                     if (!comm.is(":visible")) {
                         show(comm);
                         var parents = comm.parents();
