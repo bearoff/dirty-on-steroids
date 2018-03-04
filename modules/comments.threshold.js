@@ -116,7 +116,7 @@ d3.addModule(
         },
 
         fixParentLink: function(comment) {
-            if (d3.content.variant !== "dirty.ru") {
+            if (d3.content.variant !== "dirty.ru" && d3.content.variant !== "leprosorium.ru") {
                 return;
             }
 
@@ -124,10 +124,16 @@ d3.addModule(
                 return;
             }
 
-            var parent_link = $j("<a title='Highlight parent' style='cursor: pointer;'>&nbsp;&uarr;&nbsp;</a>");
-            comment.container.find(">.b-comment__body .b-comment-toolbar").append(parent_link);
-            var parent = $j("#b-comment-"+comment.parentId);
+            var parent_link = $j("<a title='Highlight parent' style='cursor: pointer; font-size: 13px; color: blue;'>&nbsp;&uarr;&nbsp;</a>");
+            comment.container.find(">.b-comment__body .b-comment-toolbar, .c_footer .ddi").append(parent_link);
+            if (d3.content.variant === "dirty.ru") {
+                var parent = $j("#b-comment-"+comment.parentId);
+            } else {
+                parent = $j("#"+comment.parentId);
+            }
+
             parent_link.click(function(){
+                parent.show();
                 var parent_body = parent.find(">.b-comment__body ");
                 parent_body.css('border', '1px solid grey').css('background', 'lightyellow');
                 setTimeout(function(){
