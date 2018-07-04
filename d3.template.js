@@ -21,8 +21,8 @@
 // @include         https://dirty.ru/*
 // @include         https://*.dirty.ru/*
 // @include         https://www.reddit.com/*
-// @include         https://habrahabr.ru/*
-// @include         https://geektimes.ru/*
+// @include         https://habr.com/*
+// @include         https://geektimes.com/*
 // @run-at          document-end
 // @all_frames      true
 // @version         @buildTime@
