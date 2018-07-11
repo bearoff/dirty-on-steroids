@@ -13,7 +13,7 @@ Item.prototype=
             return null;
         } else {
             var text = container_temp.text();
-            if (d3.content.variant === "habrahabr.ru") {
+            if (d3.content.variant === "habr.com") {
                 text = text.replace("–", "-");
             }
             var val = parseInt(text, 10);

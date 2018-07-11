@@ -12,7 +12,7 @@ d3.addModule(
             ,expandCollapsedComments:{type:'checkbox',value :true,caption:'Разворачивать свёрнутые ветки', description:'Разворачивать свёрнутые ветки'}
 			},
     threshold: 0,
-    variant: ['dirty.ru','leprosorium.ru','reddit.com','habrahabr.ru'],
+    variant: ['dirty.ru','leprosorium.ru','reddit.com','habr.com'],
     select:null,
     min_rating:0,
     max_rating:0,
@@ -65,7 +65,7 @@ d3.addModule(
                 header_div = $j("div.b-comments_controls");
             } else if (d3.content.variant == "reddit.com") {
                 header_div = $j(".thing p.tagline:first");
-            } else if (d3.content.variant == "habrahabr.ru") {
+            } else if (d3.content.variant == "habr.com") {
                 header_div = $j(".comments-section__head");
                 extra_style = "font-size: 16px;"
             }
@@ -96,7 +96,7 @@ d3.addModule(
         },
 
         showWithParents: function(comment_container) {
-            if (d3.content.variant === "habrahabr.ru") {
+            if (d3.content.variant === "habr.com") {
                 comment_container = comment_container.find("> .content-list__item_comment");
                 var parent_link = comment_container.find(".js-comment_parent");
                 var parent_id = parent_link.length ? "comment_" + parent_link.data('parent_id') : "";
@@ -261,7 +261,7 @@ d3.addModule(
                 if (isVisible && comment.parentId) {
                     if (d3.content.variant === "reddit.com") {
                         this.visible_parents[comment.parentId.replace("#", "thing_t1_")] = true;
-                    } else if (d3.content.variant === "dirty.ru" || d3.content.variant === "habrahabr.ru") {
+                    } else if (d3.content.variant === "dirty.ru" || d3.content.variant === "habr.com") {
                         this.visible_parents[comment.parentId] = true;
                     }
                 }
@@ -291,7 +291,7 @@ d3.addModule(
                         show(parents.filter(":not(:visible)"));
                     }
                 }
-            } else if (d3.content.variant === "habrahabr.ru") {
+            } else if (d3.content.variant === "habr.com") {
                 for (var key in this.visible_parents) {
                     var comm = $j("#" + key);
                     if (!comm.is(":visible")) {
