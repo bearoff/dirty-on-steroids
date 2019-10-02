@@ -220,7 +220,7 @@ var d3=
 		name: 'config core module',
 		data: {},	/// config values
 		controls: {}, /// Controls sorted by sheets
-		config: {linkDisposition: {type:'checkbox', caption:"Линк на настройки в заголовке", value:0}},
+		config: {linkDisposition: {type:'checkbox', caption:"Галочка, которая не работает", value:0}},
 
 		/// Add link to config box
 		run: function()
