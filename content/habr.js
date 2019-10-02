@@ -37,6 +37,49 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
         });
         d3.Comment = HabrComment;
 
+        var HabrPost=function(container)
+        {
+            this.container=container;
+            this.container.get(0).post=this;
+
+            var el_id = container.attr("id");
+
+            if (el_id) {
+                var parts = el_id.split('_');
+                this.id = parseInt(parts[parts.length-1], 10);
+            } else {
+                this.id = 0;
+            }
+
+            this.info=$j('.post-stats', this.container);
+            this.userName = $j('.user-info__nickname',container).text();
+            this.userId= ''; //parseInt($j("a.c_user", this.container).attr("data-user_id") ,10);
+            this.isNew = true; // ($j(".post-stats__comments-count_new", this.info).text() != "0");
+            this.isMine = this.userName==d3.user.name;
+        };
+
+        HabrPost.prototype=new Item
+        ({
+            contentClass: '.dt',
+            bodyClass: 'div.dt div.dti div.post_body',
+            footerClass: '.dd',
+            getClass: function(){return 'post';},
+            _idMask: /(\d+)\/?(#.*)?$/,
+
+            switchBody: function()
+            {
+                with(this.container.style) if(display=='') display='none'; else display='';
+                return false;
+            },
+            commentsCount: function(){
+                var comments_count_div = this.info.find(".post-stats__comments-link .post-stats__comments-count:first");
+                return parseInt(comments_count_div.text(), 10);
+            },
+            ratingContainer: function(){return $j('.voting-wjt__counter', this.info);}
+        });
+
+        d3.Post=HabrPost;
+
 		var isInbox = false;
 		d3.page=
 		{
@@ -81,6 +124,12 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
 		var me=this;
 		$j('.content-list__item_comment').each(function () {
 			me.countComment(new d3.Comment($j(this)));
+		});
+		$j('.content-list__item_post').each(function () {
+            var post = new d3.Post($j(this));
+            if (post.id) {
+                me.countPost(post);
+            }
 		});
 	},
 

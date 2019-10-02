@@ -12,7 +12,7 @@ d3.addModule(
             ,saveSelectedOption:{type:'checkbox',value :false,caption:'Использовать опцию, выбранную на странице, вместо умолчания', description:'Если поставить тут галочку, то вместо опции по умолчанию будет использоваться та опция, которую вы последний раз выбрали в ниспадающем меню.'}
 			},
     threshold: 0,
-    variant: ['dirty.ru'],
+    variant: ['dirty.ru', 'habr.com', 'leprosorium.ru'],
     select:null,
     min_rating:0,
     max_rating:0,
@@ -26,7 +26,11 @@ d3.addModule(
     my_posts:{},
         run: function()
         {
-            if (!d3.content.posts.length || d3.page.user || d3.page.f_search) {
+            if (!d3.content.posts.length) {
+                return false;
+            }
+
+            if (d3.content.variant == "dirty.ru" && (d3.page.user || d3.page.f_search)) {
                 return false;
             }
 
@@ -47,7 +51,9 @@ d3.addModule(
             this.getStats();
             this.prepareThresholds();
             this.updateVisibility(false);
-            this.addResetLink();
+            if (d3.content.variant !== "habr.com") {
+                this.addResetLink();
+            }
             this.displaySelect();
         },
 
@@ -64,7 +70,13 @@ d3.addModule(
                 select_width = select_width + 30;
             }
             var me = this;
-            var header_div = $j(".p-post-list__toolbar:first");
+            if (d3.content.variant == "dirty.ru") {
+                var header_div = $j(".p-post-list__toolbar:first");
+            } else if (d3.content.variant == "habr.com") {
+                var header_div = $j(".tabs .tabs__level_bottom .toggle-menu");
+            } else if (d3.content.variant == "leprosorium.ru") {
+                var header_div = $j(".b-subdomain_aside_right .b-posts_threshold__plain");
+            }
             var select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;"></div>');
             this.select  = $j('<select id="advansed_treshhold" style="width:' + select_width + 'px;font-size:15px;"></select>');
             select_div.append(this.select);

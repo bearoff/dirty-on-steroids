@@ -107,7 +107,10 @@ d3.addContentModule(/(.*\.)?(d3|dirty).ru/i,
 		$j(document).on('DOMNodeInserted', function (event) {
 			var $current = $j(event.target);
 			if ($current.is(me.comment_selector)) processComment($current);
-			if ($current.is(".p-post-list__post")) processPost($current);
+			if ($current.is(".p-post-list__post")) {
+                processPost($current);
+                $j(document).trigger('d3_sp_new_posts');
+            }
 
             var posts = $j(".p-post-list__post", event.target);
             if (posts.length) {

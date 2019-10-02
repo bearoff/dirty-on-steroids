@@ -39,6 +39,50 @@ d3.addContentModule(/(.*\.)?leprosorium.ru/i,
         });
         d3.Comment = LeproComment;
 
+        var LeproPost=function(container)
+        {
+            this.container=container;
+            this.container.get(0).post=this;
+
+            var el_id = container.attr("id");
+
+            if (el_id) {
+                var str_id = el_id.replace("p", '');
+                this.id = parseInt(str_id, 10);
+            } else {
+                this.id = 0;
+            }
+
+            this.info=$j('.dd', this.container);
+            this.userName = $j('.c_user',container).text();
+            this.userId= ''; //parseInt($j("a.c_user", this.container).attr("data-user_id") ,10);
+            this.isNew = true; // ($j(".post-stats__comments-count_new", this.info).text() != "0");
+            this.isMine = this.userName==d3.user.name;
+        };
+
+        LeproPost.prototype=new Item
+        ({
+            contentClass: '.dt',
+            bodyClass: 'div.dt div.dti div.post_body',
+            footerClass: '.dd',
+            getClass: function(){return 'post';},
+            _idMask: /(\d+)\/?(#.*)?$/,
+
+            switchBody: function()
+            {
+                with(this.container.style) if(display=='') display='none'; else display='';
+                return false;
+            },
+            commentsCount: function(){
+                var comments_count_div = this.info.find(".b-post_comments_links:first");
+                var parts = comments_count_div.text().split("&");
+                return parseInt(parts[0], 10);
+            },
+            ratingContainer: function(){return $j('.vote_result', this.info);}
+        });
+
+        d3.Post=LeproPost;
+
 		var isInbox = document.location.pathname.substr(0,10)=="/my/inbox/";
 		d3.page=
 		{
@@ -71,7 +115,7 @@ d3.addContentModule(/(.*\.)?leprosorium.ru/i,
 		});
 
 		function processPost($post) {
-			var post = new Post($post);
+			var post = new d3.Post($post);
 			me.countPost(post);
 			me.postListeners.forEach(function (listener) {
 				try {
@@ -100,11 +144,17 @@ d3.addContentModule(/(.*\.)?leprosorium.ru/i,
 			if ($current.is(".comment")) processComment($current);
 			if ($current.is(".post")) processPost($current);
 
-			$j("div.post", event.target).each(
-				function () {
-					processPost($j(this));
-				}
-			);
+
+            var posts = $j("div.post", event.target);
+            if (posts.length) {
+                posts.each(
+                    function () {
+                        processPost($j(this));
+                    }
+                );
+                $j(document).trigger('d3_sp_new_posts');
+            }
+
 			$j("div.comment", event.target).each(
 				function () {
 					processComment($j(this));
@@ -119,7 +169,7 @@ d3.addContentModule(/(.*\.)?leprosorium.ru/i,
 		this.comments=[];
 		var me=this;
 		$j('.post').each(function () {
-			me.countPost(new Post($j(this)));
+			me.countPost(new d3.Post($j(this)));
 		});
 		$j('.comment').each(function () {
 			me.countComment(new d3.Comment($j(this)));
