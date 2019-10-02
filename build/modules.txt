@@ -7,3 +7,4 @@ update.link.js
 comments.threshold.js
 posts.threshold.js
 comments.counter.lepra.js
+handle.my.things.js
