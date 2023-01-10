@@ -129,6 +129,7 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
 		var me=this;
 		$j(".tm-comment-thread__comment > [class^='tm-comment-thread__indent']").each(function () {
 			me.countComment(new d3.Comment($j(this)));
+        });
 		$j('.content-list__item_post').each(function () {
             var post = new d3.Post($j(this));
             if (post.id) {
