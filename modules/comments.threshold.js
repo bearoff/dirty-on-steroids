@@ -66,7 +66,7 @@ d3.addModule(
             } else if (d3.content.variant == "reddit.com") {
                 header_div = $j(".thing p.tagline:first");
             } else if (d3.content.variant == "habr.com") {
-                header_div = $j(".comments-section__head");
+                header_div = $j(".tm-article-comments__article-snippet");
                 extra_style = "font-size: 16px;"
             }
             var select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;"></div>');

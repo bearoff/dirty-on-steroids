@@ -226,7 +226,10 @@ var d3=
 		run: function()
 		{
 			d3.content.addConfigLink('configLink', this.config.linkDisposition.value);
-			$j('#configLink').click(function(event){d3.config.getBox().show();return false;});
+            setTimeout(() => {
+                // because of habr
+                $j('#configLink').click(function(event){d3.config.getBox().show();return false;});
+            }, 3000);
 		},
 		/// Init and return config box
 		getBox: function()
@@ -240,6 +243,7 @@ var d3=
 		/// Draw config box
 		drawBox: function()
 		{
+                            console.log(JSON.stringify("add menu"));
 			var box=$j(d3.newElement('div'
 				,{style:{position:'fixed',top:($j(window).height()/2-150)+'px',left:($j(window).width()/2-300)+'px',width:'600px',height:'300px',backgroundColor: '#FFFFCC',border:'1px grey solid',zIndex: '1000',padding:'0 1ex'}
 				 ,attributes:{id:'configBox'}
@@ -470,6 +474,12 @@ var d3_hostmask = /(.*\.)?(d3|dirty).ru/i;
 if (document.location.hostname.match(d3_hostmask)) {
     // todo add some check that content was loaded instead of hardcoded timeout
     timeout = 3000;
+}
+var habr_hostmask = /(.*\.)?(habr).com/i;
+if (document.location.hostname.match(habr_hostmask)) {
+    // todo add some check that content was loaded instead of hardcoded timeout
+    console.log(JSON.stringify("timeout for habr"));
+    timeout = 5000;
 }
 
 setTimeout(function () {
