@@ -20,7 +20,6 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
             this.container=container;
             container.get(0).comment=this;
             this.id=this.container.find("> [class^='tm-comment-thread__indent']").data("comment-body");
-                    console.log(JSON.stringify(this.id));
             this.isMine=this.container.find('.is_author').length > 0;
             this.userName=$j('.tm-user-info__username',this.container).text();
             var children_wrapper = this.container.closest(".tm-comment-thread__children");
