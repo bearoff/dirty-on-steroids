@@ -37,7 +37,7 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
             footerClass: '.tm-comment-footer',
             getClass: function(){return 'tm-comment-footer';},
             ratingContainer: function(){
-                return $j('.tm-votes-meter__value', this.container);
+                return $j('.tm-votes-meter__value, .tm-votes-lever__score-counter', this.container);
             }
         });
         d3.Comment = HabrComment;

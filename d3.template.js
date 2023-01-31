@@ -479,7 +479,7 @@ var habr_hostmask = /(.*\.)?(habr).com/i;
 if (document.location.hostname.match(habr_hostmask)) {
     // todo add some check that content was loaded instead of hardcoded timeout
     console.log(JSON.stringify("timeout for habr"));
-    timeout = 5000;
+    timeout = 3000;
 }
 
 setTimeout(function () {
