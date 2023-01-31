@@ -19,20 +19,21 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
         {
             this.container=container;
             container.get(0).comment=this;
-            this.id=this.container.data("comment-body");
+            this.id=this.container.find("> [class^='tm-comment-thread__indent']").data("comment-body");
+                    console.log(JSON.stringify(this.id));
             this.isMine=this.container.find('.is_author').length > 0;
             this.userName=$j('.tm-user-info__username',this.container).text();
             var children_wrapper = this.container.closest(".tm-comment-thread__children");
             this.parentId = "";
             if (children_wrapper.length) {
-                var parent_comment = children_wrapper.siblings(".tm-comment-thread__comment").find("> [class^='tm-comment-thread__indent']");
-                this.parentId = parent_comment.data('comment-body');
+                var parent_comment = children_wrapper.siblings(".tm-comment-thread__comment");
+                this.parentId = parent_comment.find("> [class^='tm-comment-thread__indent']").data('comment-body');
                 this.parentComment = parent_comment;
             }
         };
         HabrComment.prototype = new Item
         ({
-            contentClass: ".tm-comment-thread__comment > [class^='tm-comment-thread__indent']",
+            contentClass: ".tm-comment-thread__comment",
             bodyClass: '.tm-comment',
             footerClass: '.tm-comment-footer',
             getClass: function(){return 'tm-comment-footer';},
@@ -127,7 +128,7 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
 		this.posts=[];
 		this.comments=[];
 		var me=this;
-		$j(".tm-comment-thread__comment > [class^='tm-comment-thread__indent']").each(function () {
+		$j(".tm-comment-thread__comment").each(function () {
 			me.countComment(new d3.Comment($j(this)));
         });
 		$j('.content-list__item_post').each(function () {
