@@ -22,12 +22,12 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
             this.id=this.container.data("comment-body");
             this.isMine=this.container.find('.is_author').length > 0;
             this.userName=$j('.tm-user-info__username',this.container).text();
-            var parent = this.container.closest(".tm-comment-thread__children");
+            var children_wrapper = this.container.closest(".tm-comment-thread__children");
             this.parentId = "";
-            if (parent) {
-                // not working - draft
-                var parent_comment = parent.find("> .tm-comment-thread__comment  > [class^='tm-comment-thread__indent']");
+            if (children_wrapper.length) {
+                var parent_comment = children_wrapper.siblings(".tm-comment-thread__comment").find("> [class^='tm-comment-thread__indent']");
                 this.parentId = parent_comment.data('comment-body');
+                this.parentComment = parent_comment;
             }
         };
         HabrComment.prototype = new Item

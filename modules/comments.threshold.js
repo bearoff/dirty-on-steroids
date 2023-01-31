@@ -116,7 +116,7 @@ d3.addModule(
         },
 
         fixParentLink: function(comment) {
-            if (d3.content.variant !== "dirty.ru" && d3.content.variant !== "leprosorium.ru") {
+            if (d3.content.variant !== "dirty.ru" && d3.content.variant !== "leprosorium.ru" && d3.content.variant !== "habr.com") {
                 return;
             }
 
@@ -128,13 +128,20 @@ d3.addModule(
             comment.container.find(">.b-comment__body .b-comment-toolbar, .c_footer .ddi").append(parent_link);
             if (d3.content.variant === "dirty.ru") {
                 var parent = $j("#b-comment-"+comment.parentId);
+            } else if (d3.content.variant === "habr.com") {
+                parent_link = comment.container.find(".tm-comment__icon");
+                parent = comment.parentComment;
             } else {
                 parent = $j("#"+comment.parentId);
             }
 
             parent_link.click(function(){
                 parent.show();
-                var parent_body = parent.find(">.b-comment__body ");
+                if (d3.content.variant === "dirty.ru") {
+                    var parent_body = parent.find(">.b-comment__body ");
+                } else if (d3.content.variant === "habr.com") {
+                    var parent_body = parent;
+                }
                 parent_body.css('border', '1px solid grey').css('background', 'lightyellow');
                 setTimeout(function(){
                     parent_body.css('background', 'none');
@@ -251,6 +258,7 @@ d3.addModule(
         {
             var show = function(item){item.css('display','block');};
             var hide = function(item){item.css('display','none');};
+//            var hide = show;
             this.visible_parents = {};
 
             for (var i=0; i<d3.content.comments.length; i++) {
