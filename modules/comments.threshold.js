@@ -57,23 +57,38 @@ d3.addModule(
         {
             var me = this;
             var extra_style = "";
-            if (d3.content.variant == "dirty.ru") {
+            if (d3.content.variant === "dirty.ru") {
                 var header_div = $j(".p-post-item__toolbar:first");
                 // fixing margins
                 $j(".p-post-item__sorting").css("margin", "0 20px;");
-            } else if (d3.content.variant == "leprosorium.ru") {
+            } else if (d3.content.variant === "leprosorium.ru") {
                 header_div = $j("div.b-comments_controls");
-            } else if (d3.content.variant == "reddit.com") {
+            } else if (d3.content.variant === "reddit.com") {
                 header_div = $j(".thing p.tagline:first");
-            } else if (d3.content.variant == "habr.com") {
-                header_div = $j(".tm-main-menu");
+            } else if (d3.content.variant === "habr.com") {
+                header_div = $j(".tm-header-user-menu");
                 extra_style = "font-size: 16px;"
             }
-            var select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;"></div>');
+
+            let F_SELECT_FIXED_ON_TOP = true;
+
+            if (F_SELECT_FIXED_ON_TOP) {
+                var select_div = $j('<div id="advansed_treshhold_div" style="margin-left:5px;margin-right:5px; border-radius:4px;position: fixed; top: 5px; left: 10px; z-index: 10000;"></div>');
+            } else {
+                select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;border-radius:4px;"></div>');
+            }
+
             var select_width = this.hidden_rating_count ? 200 : 180;
             this.select  = $j('<select id="advansed_treshhold" style="width:'+select_width+'px;'+extra_style+'"></select>');
             select_div.append(this.select);
-            header_div.append(select_div);
+            
+            if (F_SELECT_FIXED_ON_TOP) {
+                $j("body").append(select_div);
+            } else if (d3.content.variant === "habr.com") {
+                header_div.before(select_div);
+            } else {
+                header_div.append(select_div);
+            }
 
             for (var i=0; i<this.select_properties.thresholds.length;i++) {
                 var visible_count = this.always_visible_count + this.select_properties.counts[i];

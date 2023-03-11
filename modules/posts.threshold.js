@@ -70,17 +70,30 @@ d3.addModule(
                 select_width = select_width + 30;
             }
             var me = this;
-            if (d3.content.variant == "dirty.ru") {
+            if (d3.content.variant === "dirty.ru") {
                 var header_div = $j(".p-post-list__toolbar:first");
-            } else if (d3.content.variant == "habr.com") {
-                var header_div = $j(".tabs .tabs__level_bottom .toggle-menu");
-            } else if (d3.content.variant == "leprosorium.ru") {
-                var header_div = $j(".b-subdomain_aside_right .b-posts_threshold__plain");
+            } else if (d3.content.variant === "habr.com") {
+                header_div = $j(".tabs .tabs__level_bottom .toggle-menu");
+            } else if (d3.content.variant === "leprosorium.ru") {
+                header_div = $j(".b-subdomain_aside_right .b-posts_threshold__plain");
             }
-            var select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;"></div>');
+
+            let F_SELECT_FIXED_ON_TOP = true;
+            
+            if (F_SELECT_FIXED_ON_TOP) {
+                var select_div = $j('<div id="advansed_treshhold_div" style="margin-left:5px;margin-right:5px; border-radius:4px;position: fixed; top: 5px; left: 10px; z-index: 10000;"></div>');
+            } else {
+                select_div = $j('<div id="advansed_treshhold_div" style="display:inline;margin-left:5px;margin-right:5px;border-radius:4px;"></div>');
+            }
+
             this.select  = $j('<select id="advansed_treshhold" style="width:' + select_width + 'px;font-size:15px;"></select>');
             select_div.append(this.select);
-            header_div.after(select_div);
+
+            if (F_SELECT_FIXED_ON_TOP) {
+                $j("body").append(select_div);
+            } else {
+                header_div.append(select_div);
+            }
 
             for (var i=0; i<this.select_properties.thresholds.length;i++) {
                 var visible_count = this.always_visible_count + this.select_properties.counts[i];
