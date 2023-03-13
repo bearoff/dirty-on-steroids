@@ -34,7 +34,7 @@ d3.addModule(
                 return false;
             }
 
-            if (d3.content.variant === "leprosorium.ru" && !$j(".b-post_my_post_controls_button_in_interest").length) {
+            if (d3.content.variant === "leprosorium.ru" && $j(".b-comments_controls").length) {
                 // this is not index
                 return false;
             }
