@@ -124,6 +124,7 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
 
 	countItems: function()
 	{
+        console.log(JSON.stringify("Habr - counting items"));
 		this.posts=[];
 		this.comments=[];
 		var me=this;
@@ -136,6 +137,10 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
                 me.countPost(post);
             }
 		});
+
+        if (!this.comments.length) {
+            me.createRecountCountsButton();
+        }
 	},
 
 	countPost: function(post) {
@@ -199,6 +204,19 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
 	createLeftNavigator: function()
 	{
 		$j('ul.tabmenu').append('<li id="leftNavigator"><ul style="list-style-type: none; padding: 0px 0px 0px 5px; font-size: 0.85em;"></ul></li>');
-	}
+	},
 
+    createRecountCountsButton: function() {
+        if ($j("#recount_btn").length) {
+            return;
+        }
+
+        var reload_btn = $j('<div id="recount_btn" style="position: fixed;top: 0px;right: 0px;height: 25px;width: 25px;border: 1px solid black;background-color: red;z-index: 10000;cursor: pointer;"><span></span></div>');
+        $j("body").append(reload_btn);
+        var me = this;
+        reload_btn.click(function(){
+            me.countItems();
+            $j(document).trigger('d3_sp_new_comments');
+        });
+    }
 });

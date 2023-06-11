@@ -25,13 +25,6 @@ d3.addModule(
     visible_parents:{},
         run: function()
         {
-            if (!d3.page.postComments
-                || !d3.content.comments.length
-                || d3.content.comments.length < parseInt(this.config.minCommentsCount.value))
-            {
-                return false;
-            }
-
             if (this.config.saveSelectedOption.value) {
                 this.selected_index = d3.storage.get('commentsSelectedThreshold'); // todo ask about how to use hidden options
                 if (!this.selected_index) {
@@ -42,6 +35,15 @@ d3.addModule(
                 if (this.selected_index < 0) {
                     this.selected_index = 0;
                 }
+            }
+
+            this.addReinitListener();
+            
+            if (!d3.page.postComments
+                || !d3.content.comments.length
+                || d3.content.comments.length < parseInt(this.config.minCommentsCount.value))
+            {
+                return false;
             }
 
             if (this.config.expandCollapsedComments.value) {
@@ -342,5 +344,34 @@ d3.addModule(
             $j('.b-comment__expand-button').each(function(){
                 $j(this)[0].click();
             });
-            }
+        },
+
+        addReinitListener: function() {
+            var me = this;
+            $j(document).on('d3_sp_new_comments', function (event) {
+                clearTimeout(me.reset_timeout);
+                me.reset_timeout = setTimeout(function(){
+                    me.resetFilter();
+                }, 200);
+            });
+        },
+
+        resetFilter: function(reset_link) {
+            var me = this;
+
+            me.threshold = 0;
+            me.hidden_rating_count = me.always_visible_count = me.min_rating = me.max_rating = 0;
+            me.select = null;
+            me.select_properties = {thresholds:[], selected_strings:[], counts:[]};
+            me.sorted_comments = this.my_comments = {};
+
+            $j("#advansed_treshhold_div").remove();
+            me.getStats();
+            me.prepareThresholds();
+            me.updateVisibility(false);
+            me.displaySelect();
+
+            var new_count = d3.content.comments.length;
+            $j("#recount_btn").find("span").text(" (+" + new_count + ")").show().fadeOut(5000);
+        }
 });
