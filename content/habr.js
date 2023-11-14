@@ -140,6 +140,7 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
 
         if (!this.comments.length) {
             me.createRecountCountsButton();
+            me.startPeriodicCommentsCheck();
         }
 	},
 
@@ -218,5 +219,18 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
             me.countItems();
             $j(document).trigger('d3_sp_new_comments');
         });
+    },
+
+    startPeriodicCommentsCheck: function() {
+        var me = this;
+        setTimeout(function(){
+            if ($j(".tm-comment-thread__comment").length) {
+                console.log(JSON.stringify("Comments found, will reinit dropdown"));
+                me.countItems();
+                $j(document).trigger('d3_sp_new_comments');
+            } else {
+                me.startPeriodicCommentsCheck();
+            }
+        }, 2000);
     }
 });
