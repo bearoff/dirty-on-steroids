@@ -230,6 +230,16 @@ d3.addModule(
                 this.selected_index = curr_i;
             }
 
+            var MIN_SHOWN_COUNT = 6;
+            for (var t = this.selected_index; t >= 0; t--) {
+                // select another treshhold if the current one contains too small count of items
+                if (this.select_properties.counts[t] >= MIN_SHOWN_COUNT) {
+                    this.selected_index = t;
+                    break;
+                }
+                console.log('curr trhreshold contains just ' + this.select_properties.counts[this.selected_index] + ' items, will lower');
+            }
+
             this.select_properties.selected_strings[this.selected_index] = 'selected';
             this.threshold = this.select_properties.thresholds[this.selected_index];
         },
