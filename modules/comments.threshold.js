@@ -130,6 +130,12 @@ d3.addModule(
             }
 
             comment_container.show();
+
+            comment_container.css('border', '1px solid grey').css('background', 'lightyellow');
+            setTimeout(function(){
+                comment_container.css('background', 'none');
+            }, 35000);
+
             if (!parent_id) {
                 return;
             }
@@ -138,6 +144,8 @@ d3.addModule(
         },
 
         fixParentLink: function(comment) {
+            var me = this;
+
             if (d3.content.variant !== "dirty.ru" && d3.content.variant !== "leprosorium.ru" && d3.content.variant !== "habr.com") {
                 return;
             }
@@ -146,7 +154,7 @@ d3.addModule(
                 return;
             }
 
-            var parent_link = $j("<a title='Highlight parent' style='cursor: pointer; font-size: 13px; color: blue;'>&nbsp;&uarr;&nbsp;</a>");
+            var parent_link = $j("<a class='d3sp_parent_link' title='Highlight parent' style='cursor: pointer; font-size: 13px; color: blue; padding: 3px 10px;'>&uarr;</a>");
             comment.container.find(">.b-comment__body .b-comment-toolbar, .c_footer .ddi").append(parent_link);
             if (d3.content.variant === "dirty.ru") {
                 var parent = $j("#b-comment-"+comment.parentId);
@@ -158,16 +166,10 @@ d3.addModule(
             }
 
             parent_link.click(function(){
-                parent.show();
-                if (d3.content.variant === "dirty.ru") {
-                    var parent_body = parent.find(">.b-comment__body ");
-                } else if (d3.content.variant === "habr.com") {
-                    var parent_body = parent;
-                }
-                parent_body.css('border', '1px solid grey').css('background', 'lightyellow');
-                setTimeout(function(){
-                    parent_body.css('background', 'none');
-                }, 500);
+                me.showWithParents(parent);
+                setTimeout(() => {
+                    $j('html, body').animate({ scrollTop: parent.offset().top }, 200);
+                }, 100);
             });
         },
 
