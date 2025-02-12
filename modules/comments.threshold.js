@@ -117,7 +117,7 @@ d3.addModule(
             }
         },
 
-        showWithParents: function(comment_container) {
+        showWithParents: function(comment_container, callback) {
             if (d3.content.variant === "habr.com") {
                 comment_container = comment_container.find("> .content-list__item_comment");
                 var parent_link = comment_container.find(".js-comment_parent");
@@ -137,10 +137,11 @@ d3.addModule(
             }, 35000);
 
             if (!parent_id) {
+                callback();
                 return;
             }
             var parent = $j("#"+parent_id);
-            this.showWithParents(parent);
+            this.showWithParents(parent, callback);
         },
 
         fixParentLink: function(comment) {
@@ -154,7 +155,7 @@ d3.addModule(
                 return;
             }
 
-            var parent_link = $j("<a class='d3sp_parent_link' title='Highlight parent' style='cursor: pointer; font-size: 13px; color: blue; padding: 3px 10px;'>&uarr;</a>");
+            var parent_link = $j("<a class='d3sp_parent_link' title='Show and highlight parents' style='cursor: pointer; font-size: 13px; color: blue; padding: 3px 20px;'>&uarr;</a>");
             comment.container.find(">.b-comment__body .b-comment-toolbar, .c_footer .ddi").append(parent_link);
             if (d3.content.variant === "dirty.ru") {
                 var parent = $j("#b-comment-"+comment.parentId);
@@ -166,11 +167,20 @@ d3.addModule(
             }
 
             parent_link.click(function(){
-                me.showWithParents(parent);
-                setTimeout(() => {
-                    $j('html, body').animate({ scrollTop: parent.offset().top }, 200);
-                }, 100);
+                me.showWithParents(parent, () => {
+                    const MORE_SCROLL_SHIFT = 400;
+                    var targetOffset = $j(parent).offset().top - MORE_SCROLL_SHIFT;
+                    var currentScroll = $j(window).scrollTop();
+                    if (currentScroll > targetOffset) {
+                        $j('html, body').animate({ scrollTop: targetOffset }, 100);
+                    };
+                });
             });
+
+            parent_link.hover(
+                function() {$j(this).css('background-color', 'lightyellow')},
+                function() {$j(this).css('background-color', 'transparent')}
+            );
         },
 
         getStats: function()
