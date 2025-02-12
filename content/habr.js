@@ -12,6 +12,8 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
 	postsUpdatedHandler: new DelayedEventHandler(),
 	commentsUpdatedHandler: new DelayedEventHandler(),
 	itemsUpdatedHandler: new DelayedEventHandler(),
+    f_scroll_in_progress: false,
+    f_first_count_was_done: false,
 
 	run: function()
 	{
@@ -37,7 +39,7 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
             footerClass: '.tm-comment-footer',
             getClass: function(){return 'tm-comment-footer';},
             ratingContainer: function(){
-                return $j('.tm-votes-meter__value, .tm-votes-lever__score-counter', this.container);
+                return $j('.tm-votes-lever__score, .tm-votes-meter__value', this.container);
             }
         });
         d3.Comment = HabrComment;
@@ -122,15 +124,72 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
 		}
 	},
 
-	countItems: function()
+    // very dirty draft code
+    scrollToBottomAndBack: function() {
+        var original_scroll_position = $j(window).scrollTop();
+		let me = this;
+        if (me.f_scroll_in_progress) {
+            console.log(JSON.stringify("skip scrolling as it is in progress"));
+            return;
+        }
+
+        me.f_scroll_in_progress = true;
+
+        console.log(JSON.stringify("starting scroll"));
+
+        const SCROLL_SPEED = 25; // window heights per second
+        const screenHeight = window.innerHeight;
+        const totalHeight = document.documentElement.scrollHeight;
+        const long_duration = (totalHeight / screenHeight) / SCROLL_SPEED * 1000;
+        const commentsOffset = $j('#publication-comments').offset()?.top ?? 0;
+
+        $j('html').animate({ scrollTop: commentsOffset }, 10, 'linear', function() {
+            console.log(JSON.stringify("scroll top done"));
+            $j('html').animate({ scrollTop: $j(document).height() }, long_duration, 'linear', function() {
+                console.log(JSON.stringify("scroll bottom slow done"));
+                // should load comments
+                $j('html').animate({ scrollTop: $j(document).height() }, 50, 'linear', function() {
+                    console.log(JSON.stringify("scroll bottom fast done - in case new comments were dynamically loaded"));
+                    $j('html').animate({ scrollTop: original_scroll_position }, 10, 'linear', function(){
+                        console.log(JSON.stringify("scroll initial done"));
+                        me.f_scroll_in_progress = false;
+                        me.countItems();
+                    });
+                });
+            });
+        });
+    },
+
+	countItems: function(f_scroll)
 	{
+		var me = this;
+
+        if (typeof(f_scroll) === "undefined") {
+            if (me.f_first_count_was_done) {
+                f_scroll = false;
+            } else {
+                f_scroll = true;
+                me.f_first_count_was_done = true;
+            }
+        }
+
         console.log(JSON.stringify("Habr - counting items"));
+        
+        if (f_scroll) {
+            // habr loads rating only for visible comments, so will scroll
+            console.log(JSON.stringify("Habr - will scroll"));
+            me.scrollToBottomAndBack();
+            return;
+        }
+
 		this.posts=[];
 		this.comments=[];
-		var me=this;
 		$j(".tm-comment-thread__comment").each(function () {
 			me.countComment(new d3.Comment($j(this)));
         });
+
+        console.log(JSON.stringify("Counted: " + this.comments.length));
+
 		$j('.content-list__item_post').each(function () {
             var post = new d3.Post($j(this));
             if (post.id) {
@@ -138,10 +197,20 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
             }
 		});
 
+        // as it started to fail, always adding button
+        var click_handler = me.createRecountCountsButton();
+//        click_handler();
+
         if (!this.comments.length) {
-            me.createRecountCountsButton();
-            me.startPeriodicCommentsCheck();
+            if (f_scroll) {
+//                me.countItems(true);
+//                return;
+            }
+
+//            me.startPeriodicCommentsCheck();
         }
+
+        $j(document).trigger('d3_sp_new_comments');
 	},
 
 	countPost: function(post) {
@@ -214,11 +283,21 @@ d3.addContentModule(/(.*\.)?(habr|geektimes).com/i,
 
         var reload_btn = $j('<div id="recount_btn" style="position: fixed;top: 0px;right: 0px;height: 25px;width: 25px;border: 1px solid black;background-color: red;z-index: 10000;cursor: pointer;"><span></span></div>');
         $j("body").append(reload_btn);
-        var me = this;
-        reload_btn.click(function(){
-            me.countItems();
-            $j(document).trigger('d3_sp_new_comments');
+        let me = this;
+        reload_btn.click(function(e){
+            me.countItems(true);
+            if (e.ctrlKey) {
+                console.log(JSON.stringify("Will do more scrolls and updates"));
+                setTimeout(function(){
+                    me.countItems(true);
+                }, 3000);
+                setTimeout(function(){
+                    me.countItems(true);
+                }, 6000);
+            }
         });
+
+        return reload_btn.click;
     },
 
     startPeriodicCommentsCheck: function() {

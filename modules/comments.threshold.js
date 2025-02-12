@@ -109,7 +109,12 @@ d3.addModule(
 
             this.select.change(function(e){
                 me.onThresholdChange();
-                });
+            });
+
+            if (d3.content.variant === "habr.com" && this.select_properties.thresholds.length) {
+                // as after all those scrolls we may end up with no comments visible
+                me.onThresholdChange();
+            }
         },
 
         showWithParents: function(comment_container) {
