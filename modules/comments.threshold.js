@@ -117,7 +117,7 @@ d3.addModule(
             }
         },
 
-        showWithParents: function(comment_container, callback) {
+        showWithParents: function(comment_container, callback, f_first_parent = false) {
             if (d3.content.variant === "habr.com") {
                 comment_container = comment_container.find("> .content-list__item_comment");
                 var parent_link = comment_container.find(".js-comment_parent");
@@ -131,10 +131,19 @@ d3.addModule(
 
             comment_container.show();
 
-            comment_container.css('border', '1px solid grey').css('background', 'lightyellow');
+            let color = f_first_parent ? 'lightblue' : 'lightyellow';
+            let highlight_timeout = f_first_parent ? 5000 : 35000;
+
+            if (d3.content.variant === "leprosorium.ru") {
+                var highlight_block = comment_container.find("> .c_i");
+            } else {
+                highlight_block = comment_container;
+            }
+
+            highlight_block.css('border', '1px solid grey').css('background', color);
             setTimeout(function(){
-                comment_container.css('background', 'none');
-            }, 35000);
+                highlight_block.css('background', 'none');
+            }, highlight_timeout);
 
             if (!parent_id) {
                 callback();
@@ -142,6 +151,51 @@ d3.addModule(
             }
             var parent = $j("#"+parent_id);
             this.showWithParents(parent, callback);
+        },
+
+        showChildren: function(comment_id) {
+            if (d3.content.variant !== "leprosorium.ru") {
+                // should not happen
+                return;
+            }
+
+            var me = this;
+
+            $j('[data-parent_comment_id="' + comment_id + '"]').each(function() {
+                const comment_container = $j(this);
+                const highlight_block = comment_container.find("> .c_i");
+                comment_container.show();
+                highlight_block.css('border', '1px solid grey').css('background', 'lightyellow');
+                setTimeout(function(){
+                    highlight_block.css('background', 'none');
+                }, 35000);
+
+                me.showChildren(comment_container.attr('id'));
+            });
+        },
+
+        addChildrenLink: function(comment) {
+            if (d3.content.variant !== "leprosorium.ru") {
+                return;
+            }
+
+            if (!$j('[data-parent_comment_id="' + comment.id + '"]').length) {
+                // no children
+                return;
+            }
+
+            var me = this;
+            var children_link = $j("<a class='d3sp_children_link' title='Show and highlight children' style='cursor: pointer; font-size: 13px; color: blue; padding: 3px 20px;'>&darr;</a>");
+            comment.container.find(">.b-comment__body .b-comment-toolbar, .c_footer .ddi").append(children_link);
+
+            children_link.click(function(){
+                me.showChildren(comment.id);
+            });
+
+            children_link.hover(
+                function() {$j(this).css('background-color', 'lightyellow')},
+                function() {$j(this).css('background-color', 'transparent')}
+            );
         },
 
         fixParentLink: function(comment) {
@@ -168,13 +222,13 @@ d3.addModule(
 
             parent_link.click(function(){
                 me.showWithParents(parent, () => {
-                    const MORE_SCROLL_SHIFT = 400;
+                    const MORE_SCROLL_SHIFT = 200;
                     var targetOffset = $j(parent).offset().top - MORE_SCROLL_SHIFT;
                     var currentScroll = $j(window).scrollTop();
                     if (currentScroll > targetOffset) {
                         $j('html, body').animate({ scrollTop: targetOffset }, 100);
                     };
-                });
+                }, true);
             });
 
             parent_link.hover(
@@ -188,6 +242,7 @@ d3.addModule(
             for (var i=0; i<d3.content.comments.length; i++) {
                 var rating = d3.content.comments[i].ratingValue();
                 this.fixParentLink(d3.content.comments[i]);
+                this.addChildrenLink(d3.content.comments[i]);
                 if (isNaN(rating) || null === rating) {
                     // may be deleted or with hidden rating
                     continue;
