@@ -118,10 +118,10 @@ d3.addModule(
         },
 
         showWithParents: function(comment_container, callback, f_first_parent = false) {
+            var block_to_show = comment_container;
+
             if (d3.content.variant === "habr.com") {
-                comment_container = comment_container.find("> .content-list__item_comment");
-                var parent_link = comment_container.find(".js-comment_parent");
-                var parent_id = parent_link.length ? "comment_" + parent_link.data('parent_id') : "";
+                var parent_id = comment_container[0].comment.parentId;
             } else if (d3.content.variant === "dirty.ru") {
                 var parent = comment_container.parent().closest(".b-comment:not(#b-comment-root)");
                 parent_id = parent.length ? parent.attr('id').replace("b-comment-", "") : '';
@@ -129,15 +129,15 @@ d3.addModule(
                 parent_id = comment_container.attr("data-parent_comment_id");
             }
 
-            comment_container.show();
+            block_to_show.show();
 
             let color = f_first_parent ? 'lightblue' : 'lightyellow';
             let highlight_timeout = f_first_parent ? 5000 : 35000;
 
             if (d3.content.variant === "leprosorium.ru") {
-                var highlight_block = comment_container.find("> .c_i");
+                var highlight_block = block_to_show.find("> .c_i");
             } else {
-                highlight_block = comment_container;
+                highlight_block = block_to_show;
             }
 
             highlight_block.css('border', '1px solid grey').css('background', color);
@@ -149,7 +149,13 @@ d3.addModule(
                 callback();
                 return;
             }
+
             var parent = $j("#"+parent_id);
+            if (d3.content.variant === "habr.com") {
+                // todo maybe works for all variants
+                parent = comment_container[0].comment.parentComment;
+            }
+
             this.showWithParents(parent, callback);
         },
 
