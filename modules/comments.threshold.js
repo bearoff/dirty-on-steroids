@@ -192,7 +192,13 @@ d3.addModule(
 
             var me = this;
             var children_link = $j("<a class='d3sp_children_link' title='Show and highlight children' style='cursor: pointer; font-size: 13px; color: blue; padding: 3px 20px;'>&darr;</a>");
-            comment.container.find(">.b-comment__body .b-comment-toolbar, .c_footer .ddi").append(children_link);
+
+            var parent_link = comment.container.find('.d3sp_parent_link');
+            if (parent_link.length) {
+                parent_link.before(children_link);
+            } else {
+                comment.container.find(">.b-comment__body .b-comment-toolbar, .c_footer .ddi").append(children_link);
+            }
 
             children_link.click(function(){
                 me.showChildren(comment.id);
