@@ -8,3 +8,4 @@ comments.threshold.js
 posts.threshold.js
 comments.counter.lepra.js
 handle.my.things.js
+misc_features.js
